@@ -3,7 +3,7 @@
 ## Tech Stack and structure
 I have tried to keep given tech stack and structure of application and code (according to prettier file). 
 I added supertest to test endpoints. To use mockup testing to have rebuilt index.js and put express app to server.js file.
-I have also created config file in config folder. It doesn't do to much but it's a little bit cleaner. 
+I have also created config file in config folder. It doesn't do too much, but it's a little cleaner. 
 
 ## Requirements
 ```bash
@@ -23,22 +23,13 @@ $ npm run start
 
 # watch mode
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
 ## Test
 
 ```bash
-# unit tests
+# tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
 ## Routes
