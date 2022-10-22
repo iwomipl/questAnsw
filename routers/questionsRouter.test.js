@@ -151,7 +151,7 @@ describe('mockup "/questions/:questionId/answers" path test of good response', (
     const summary = 'I am To Be! Source of all existence!'
     const res = await request(testedApp)
       .post(`/questions/${doesNotHaveAnswersId}/answers`)
-      .send({author, summary})
+      .send({ author, summary })
 
     expect(res.statusCode).toEqual(201)
     expect(res.headers['content-type']).toMatch(/json/)

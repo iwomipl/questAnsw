@@ -16,14 +16,14 @@ afterAll(async () => {
 
 })
 
-describe('mockup '/' path test of good response', () => {
+describe('mockup ' / ' path test of good response', () => {
   test('s', async () => {
 
     const res = await request(testedApp)
       .get('/').set('Accept', 'application/json')
 
     expect(res.statusCode).toEqual(200)
-    expect(res.headers["content-type"]).toMatch(/json/);
+    expect(res.headers['content-type']).toMatch(/json/)
     expect(res.body).toEqual(expect.objectContaining(mainRouterResponseBody))
   })
 })
