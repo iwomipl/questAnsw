@@ -1,18 +1,19 @@
 # Welcome to the responder
 
-#Tech Stack and structure
+# Tech Stack and structure
 I have tried to keep given tech stack and structure of application and code (according to prettier file). 
 I added supertest to test endpoints. To use mockup testing to have rebuilt index.js and put express app to server.js file.
 I have also created config file in config folder. It doesn't do to much but it's a little bit cleaner. 
 
-#routes
-Quick  
+# Routes
+Limits and required data are in next section.
 ```bash
   @GET
   '/' - get all questions in file - returns array of questions
   @POST
   '/' - add new questions to file - you have to send  { author, summary } in body. Returns added  question id.
 ```
+
 ```bash
   @GET
   '/:questionId' - get one question by its id - you have to send right question id in param - returns array with question object
@@ -30,8 +31,8 @@ Quick
   '/:questionId/answers/:answerId' - get all answers for question with given Id - you have to send right question id and answer id in param - returns array with answer
 ```
 
-#Validation and limitations
-I have created validation functions to check if uuid, questions, answers and authors strings are fit to use it on backend. Due to non existent expectations in that manner it checks mostly for basic things like length, if it is a string, and so on. UUID is being checked with regex for right structure. here are the limitations for following data:
+# Validation and limitations
+I have created validation functions to check if uuid, questions, answers and authors strings are fit to use it on backend. Due to non-existent expectations in that manner it checks mostly for basic things like length, if it is a string, and so on. UUID is being checked with regex for right structure. here are the limitations for following data:
 * id's - created by uuid, so have to have **uuid (v4)** structure, length etc.;
 * questions - string must be between **3 and 150** characters long, with **"?"** at the end;
 * answers - string must be between **3 and 150** characters long;
@@ -40,11 +41,11 @@ I have created validation functions to check if uuid, questions, answers and aut
 You can also find questionId and authorId, they are also validated and have to have **uuid (v4)** structure. But most importantly have to lead to existing data in file.
 
 
-#Testing
+# Testing
 I have created more than 100 dynamically generated tests for methods in question repository and validators. This and (very simple one method using routes) allowed me to mock test all endpoints. Mostly for right statusCodes and right answers. I have left few small easy to read, never changing files without tests.
 
 
-#TASK DESCRIPTION
+# TASK DESCRIPTION
 
 ## Overview and the goal
 
