@@ -5,6 +5,42 @@ I have tried to keep given tech stack and structure of application and code (acc
 I added supertest to test endpoints. To use mockup testing to have rebuilt index.js and put express app to server.js file.
 I have also created config file in config folder. It doesn't do to much but it's a little bit cleaner. 
 
+## Requirements
+```bash
+Node: v16.4.2
+```
+
+## Installation
+```bash
+$ npm install
+```
+
+## Running the app
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+## Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
 ## Routes
 Limits and required data are in next section.
 ```bash
