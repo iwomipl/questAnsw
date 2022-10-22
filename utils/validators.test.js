@@ -170,7 +170,4 @@ describe('checking validation utils', () => {
 
     expect(functionReturn).toEqual(properQuestion)
   })
-
-
-
 })
