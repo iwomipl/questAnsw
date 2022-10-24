@@ -2,7 +2,7 @@ import request from 'supertest'
 import { writeFile, rm } from 'fs/promises'
 import { faker } from '@faker-js/faker'
 import { TEST_QUESTIONS_FILE_PATH } from '../config/config'
-import makeApp  from '../server'
+import makeApp from '../server'
 import { Answer, QuestionResponse } from '../types'
 
 
@@ -102,7 +102,7 @@ describe('mockup "/questions" path test', () => {
       .post(`/questions`)
       .send({ author, summary })
 
-    expect(res.body as {id: string}).toHaveProperty('id', expect.stringMatching(regex))
+    expect(res.body as { id: string }).toHaveProperty('id', expect.stringMatching(regex))
     expect(res.statusCode).toEqual(201)
     expect(res.headers['content-type'] as string).toMatch(/json/)
   })
@@ -159,7 +159,7 @@ describe('mockup "/questions/:questionId/answers" path test of good response', (
 
     expect(res.statusCode).toEqual(201)
     expect(res.headers['content-type'] as string).toMatch(/json/)
-    expect(res.body as {id: string}).toHaveProperty('id', expect.stringMatching(regex))
+    expect(res.body as { id: string }).toHaveProperty('id', expect.stringMatching(regex))
   })
 
   test('"/questions/:questionId/answer" path method POST returns Error', async () => {

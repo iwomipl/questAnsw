@@ -6,6 +6,7 @@ export const questionsRouter = Router()
 export type ThisIsError = [
   { error: { message: string } }
 ]
+
 export interface DataToGetFromRequest {
   author: string;
   summary: string;
