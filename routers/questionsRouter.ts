@@ -1,9 +1,10 @@
-const { Router } = require('express')
+import { Router } from 'express'
+import { RequestCustom } from '../types'
 
-const questionsRouter = Router()
+export const questionsRouter = Router()
 
 questionsRouter
-  .get('/', async (req, res) => {
+  .get('/', async (req: RequestCustom, res) => {
     try {
       const { getQuestions } = req.repositories.questionRepo
       const questions = await getQuestions()
@@ -13,7 +14,7 @@ questionsRouter
       res.status(404).json([{ error: { message: err.message } }])
     }
   })
-  .post('/', async (req, res) => {
+  .post('/', async (req: RequestCustom, res) => {
     try {
       const { author, summary } = req.body
       const { addQuestion } = req.repositories.questionRepo
@@ -24,7 +25,7 @@ questionsRouter
       res.status(404).json([{ error: { message: err.message } }])
     }
   })
-  .get('/:questionId', async (req, res) => {
+  .get('/:questionId', async (req: RequestCustom, res) => {
     try {
       const { getQuestionById } = req.repositories.questionRepo
       const { questionId } = req.params
@@ -38,7 +39,7 @@ questionsRouter
       res.status(404).json([{ error: { message: err.message } }])
     }
   })
-  .get('/:questionId/answers', async (req, res) => {
+  .get('/:questionId/answers', async (req: RequestCustom, res) => {
     try {
       const { getAnswers } = req.repositories.questionRepo
       const { questionId } = req.params
@@ -53,7 +54,7 @@ questionsRouter
     }
   })
 
-  .post('/:questionId/answers', async (req, res) => {
+  .post('/:questionId/answers', async (req: RequestCustom, res) => {
     try {
       const { addAnswer } = req.repositories.questionRepo
       const { questionId } = req.params
@@ -67,7 +68,7 @@ questionsRouter
     }
   })
 
-  .get('/:questionId/answers/:answerId', async (req, res) => {
+  .get('/:questionId/answers/:answerId', async (req: RequestCustom, res) => {
     try {
       const { getAnswer } = req.repositories.questionRepo
       const { questionId, answerId } = req.params
@@ -80,7 +81,3 @@ questionsRouter
       res.status(404).json([{ error: { message: err.message } }])
     }
   })
-
-module.exports = {
-  questionsRouter
-}

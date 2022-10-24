@@ -1,5 +1,3 @@
-import { Request } from 'express'
-
 export type Answer = {
   id: string,
   summary: string,
@@ -25,7 +23,4 @@ export interface Question {
   addAnswer: (questionId: string, answerString: string, authorString: string)=> Promise<IdObject>;
 }
 
-export interface RequestCustom extends Request {
-  repositories: {questionRepo: Question};
-}
 

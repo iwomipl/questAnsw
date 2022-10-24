@@ -1,8 +1,8 @@
 import { readFile, writeFile } from 'fs/promises'
 import { v4 as uuid } from 'uuid'
 import { ValidationError } from '../utils/errors'
-import { Answer, IdObject, Question, QuestionResponse } from '../types/repositories/question/question.types'
 import { uuidValidator, questionValidator, authorValidator, answerValidator } from '../utils/validators'
+import { Answer, IdObject, Question, QuestionResponse } from '../types/'
 
 export const makeQuestionRepository = (fileName: string): Question => {
   const getQuestions = async (): Promise<QuestionResponse[]> => {

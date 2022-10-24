@@ -1,5 +1,6 @@
 import { NextFunction, Response } from 'express'
-import { Question, RequestCustom } from '../types/repositories/question/question.types'
+import { Question, RequestCustom } from '../types'
+
 
 const { makeQuestionRepository } = require('../repositories/question')
 
