@@ -1,4 +1,4 @@
-const { ValidationError } = require('../utils/errors')
+const { ValidationError } = require('./errors')
 const { uuidValidator, questionValidator, authorValidator, answerValidator } = require('./validators')
 const { faker } = require('@faker-js/faker')
 

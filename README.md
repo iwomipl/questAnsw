@@ -5,7 +5,7 @@ I've decided to rewrite the app to Typescript. So from now on, main branch of th
 
 ## Tech Stack and structure
 I have tried to keep given tech stack and structure of application and code (according to prettier file). 
-I added supertest to test endpoints. To use mockup testing to have rebuilt index.js and put express app to server.js file.
+I added supertest to test endpoints. To use mockup testing to have rebuilt index.ts and put express app to server.ts file.
 I have also created config file in config folder. It doesn't do too much, but it's a little cleaner. 
 
 ## Requirements
@@ -85,10 +85,10 @@ This is a REST API that uses `express.js` for simple questions and answers submi
 
 The solution is a basic skeleton of `express.js` app:
 
-1. The starting point is `index.js` - it contains the routes definitions. Most of them are empty and should be implemented as part of solving this exercise. Use the `GET /questions` route as a reference.
-2. The `repositories/question.js` holds the data store (which is a simple file, stored on disk) for questions and answers. It also has functions that require implementation.
+1. The starting point is `index.ts` - it contains the routes definitions. Most of them are empty and should be implemented as part of solving this exercise. Use the `GET /questions` route as a reference.
+2. The `repositories/question.ts` holds the data store (which is a simple file, stored on disk) for questions and answers. It also has functions that require implementation.
 3. Ther is also a test file for `question repository`. Put your repository tests there.
-4. The `middleware/repositories.js` hooks a repository into the `req` object of `express.js`. No need to extend anything here.
+4. The `middleware/repositories.ts` hooks a repository into the `req` object of `express.js`. No need to extend anything here.
 
 ## Some assumptions
 

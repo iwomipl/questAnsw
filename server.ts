@@ -1,10 +1,10 @@
-const express = require('express')
+import express from 'express'
 const { urlencoded, json } = require('body-parser')
 const makeRepositories = require('./middleware/repositories')
 const { handleFourOhFourError, handleError } = require('./utils/errors')
 const { routes } = require('./routers/routes')
 
-function app(fileName) {
+export default function app(fileName: string) {
   const app = express()
 
   //Middleware
@@ -22,5 +22,3 @@ function app(fileName) {
 
   return app
 }
-
-module.exports = app
