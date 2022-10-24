@@ -1,8 +1,8 @@
 import express from 'express'
-const { urlencoded, json } = require('body-parser')
-const makeRepositories = require('./middleware/repositories')
-const { handleFourOhFourError, handleError } = require('./utils/errors')
-const { routes } = require('./routers/routes')
+import { urlencoded, json } from 'body-parser'
+import { makeRepositories } from './middleware/repositories'
+import { handleFourOhFourError, handleError }  from './utils/errors'
+import { routes } from './routers/routes'
 
 export default function app(fileName: string) {
   const app = express()

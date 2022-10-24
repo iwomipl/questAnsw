@@ -8,7 +8,7 @@ export const makeQuestionRepository = (fileName: string): Question => {
   const getQuestions = async (): Promise<QuestionResponse[]> => {
     try {
       const fileContent = await readFile(fileName, { encoding: 'utf-8' })
-      const questions = JSON.parse(fileContent)
+      const questions: QuestionResponse[] = JSON.parse(fileContent)
 
       return questions
     } catch (err) {
@@ -80,7 +80,7 @@ export const makeQuestionRepository = (fileName: string): Question => {
   }
   const getAnswer = async (questionId: string, answerId: string): Promise<Answer[]> => {
     try {
-      if (uuidValidator(questionId) || uuidValidator(answerId)) {
+      if (uuidValidator(questionId) && uuidValidator(answerId)) {
         const [{ answers }] = await getQuestionById(questionId)
 
         return answers.filter(el => el.id === answerId)
