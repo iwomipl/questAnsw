@@ -1,5 +1,8 @@
 # Welcome to the responder
 
+# DISCLAIMER
+I've decided to rewrite the app to Typescript. So from now on, main branch of this repository will be js version, until I'll finish rewriting app on other branches and merge them into main branch. 
+
 ## Tech Stack and structure
 I have tried to keep given tech stack and structure of application and code (according to prettier file). 
 I added supertest to test endpoints. To use mockup testing to have rebuilt index.js and put express app to server.js file.
