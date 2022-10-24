@@ -1,23 +1,29 @@
-const request = require('supertest')
-const { writeFile, rm } = require('fs/promises')
-const { faker } = require('@faker-js/faker')
-const { TEST_QUESTIONS_FILE_PATH } = require('../config/config')
-const makeApp = require('../server')
+import request from 'supertest'
+import { writeFile, rm } from 'fs/promises'
+import { faker } from '@faker-js/faker'
+import { TEST_QUESTIONS_FILE_PATH } from '../config/config'
+import makeApp  from '../server'
+import { Answer, QuestionResponse } from '../types'
 
-let testedApp
-let listOfQuestions
-let doesNotHaveAnswersId
-let haveAnswersId
-let haveAnswersAuthor
-let haveAnswersSummary
-let haveAnswersAnswerArray
-let haveAnswersAnswerOne
-let haveAnswersAnswerTwo
-let oneAnswersId
+
+let testedApp = makeApp(TEST_QUESTIONS_FILE_PATH)
+let listOfQuestions: QuestionResponse[]
+let doesNotHaveAnswersId: string
+let haveAnswersId: string
+let haveAnswersAuthor: string
+let haveAnswersSummary: string
+let haveAnswersAnswerArray: Answer[]
+let haveAnswersAnswerOne: Answer
+let haveAnswersAnswerTwo: Answer
+let oneAnswersId: string
+
+type NotFound = [
+  { error: string }
+]
 
 
 beforeAll(async () => {
-  testedApp = makeApp(TEST_QUESTIONS_FILE_PATH)
+
   haveAnswersId = '50f9e662-fa0e-4ec7-b53b-7845e8f821c3'
   haveAnswersAuthor = 'John Stockton'
   haveAnswersSummary = 'What is the shape of the Earth?'
@@ -50,8 +56,6 @@ beforeAll(async () => {
     }]
 
   await writeFile(TEST_QUESTIONS_FILE_PATH, JSON.stringify(listOfQuestions))
-
-
 })
 
 afterAll(async () => {
@@ -65,8 +69,8 @@ describe('mockup "/wrong" path test of good response', () => {
     const res = await request(testedApp).get(`/${faker.datatype.uuid().slice(10)}`)
 
     expect(res.statusCode).toEqual(404)
-    expect(res.headers['content-type']).toMatch(/json/)
-    expect(res.body).toEqual(expect.objectContaining([{ error: 'Not found' }]))
+    expect(res.headers['content-type'] as string).toMatch(/json/)
+    expect(res.body as NotFound).toEqual(expect.objectContaining([{ error: 'Not found' }]))
   })
 
   test('Erroneous "/randomText" path method POST returns 404 status and error info', async () => {
@@ -74,8 +78,8 @@ describe('mockup "/wrong" path test of good response', () => {
     const res = await request(testedApp).post(`/${faker.datatype.uuid().slice(10)}`)
 
     expect(res.statusCode).toEqual(404)
-    expect(res.headers['content-type']).toMatch(/json/)
-    expect(res.body).toEqual(expect.objectContaining([{ error: 'Not found' }]))
+    expect(res.headers['content-type'] as string).toMatch(/json/)
+    expect(res.body as NotFound).toEqual(expect.objectContaining([{ error: 'Not found' }]))
   })
 })
 
@@ -86,8 +90,8 @@ describe('mockup "/questions" path test', () => {
     const res = await request(testedApp).get('/questions')
 
     expect(res.statusCode).toEqual(200)
-    expect(res.headers['content-type']).toMatch(/json/)
-    expect(res.body).toEqual(expect.objectContaining(listOfQuestions))
+    expect(res.headers['content-type'] as string).toMatch(/json/)
+    expect(res.body as QuestionResponse[]).toEqual(expect.objectContaining(listOfQuestions))
   })
 
   test('Working "/questions" path, method POST returns  returns expected data', async () => {
@@ -98,9 +102,9 @@ describe('mockup "/questions" path test', () => {
       .post(`/questions`)
       .send({ author, summary })
 
-    expect(res.body).toHaveProperty('id', expect.stringMatching(regex))
+    expect(res.body as {id: string}).toHaveProperty('id', expect.stringMatching(regex))
     expect(res.statusCode).toEqual(201)
-    expect(res.headers['content-type']).toMatch(/json/)
+    expect(res.headers['content-type'] as string).toMatch(/json/)
   })
 
   test('Erroneous "/questions" path withe method POST returns error', async () => {
@@ -108,7 +112,7 @@ describe('mockup "/questions" path test', () => {
 
 
     expect(res.statusCode).toEqual(404)
-    expect(res.headers['content-type']).toMatch(/json/)
+    expect(res.headers['content-type'] as string).toMatch(/json/)
   })
 })
 
@@ -117,15 +121,15 @@ describe('mockup "/questions/:questionId" path test of good response', () => {
     const res = await request(testedApp).get(`/questions/${haveAnswersId}`)
 
     expect(res.statusCode).toEqual(200)
-    expect(res.headers['content-type']).toMatch(/json/)
-    expect(res.body).toEqual(expect.objectContaining([listOfQuestions[0]]))
+    expect(res.headers['content-type'] as string).toMatch(/json/)
+    expect(res.body as QuestionResponse[]).toEqual(expect.objectContaining([listOfQuestions[0]]))
   })
 
   test('"/questions/:questionId" path returns Error', async () => {
     const res = await request(testedApp).get(`/questions/sdfsdf`)
 
     expect(res.statusCode).toEqual(404)
-    expect(res.headers['content-type']).toMatch(/json/)
+    expect(res.headers['content-type'] as string).toMatch(/json/)
   })
 })
 
@@ -134,15 +138,15 @@ describe('mockup "/questions/:questionId/answers" path test of good response', (
     const res = await request(testedApp).get(`/questions/${haveAnswersId}/answers`)
 
     expect(res.statusCode).toEqual(200)
-    expect(res.headers['content-type']).toMatch(/json/)
-    expect(res.body).toEqual(expect.objectContaining(haveAnswersAnswerArray))
+    expect(res.headers['content-type'] as string).toMatch(/json/)
+    expect(res.body as Answer).toEqual(expect.objectContaining(haveAnswersAnswerArray))
   })
 
   test('"/questions/:questionId/answer" path method GET returns Error', async () => {
     const res = await request(testedApp).get(`/questions/surely-non-existing-as-uuid/answers`)
 
     expect(res.statusCode).toEqual(404)
-    expect(res.headers['content-type']).toMatch(/json/)
+    expect(res.headers['content-type'] as string).toMatch(/json/)
   })
 
   test('Working "/questions/:questionId/answers" path method POST returns expected data', async () => {
@@ -154,15 +158,15 @@ describe('mockup "/questions/:questionId/answers" path test of good response', (
       .send({ author, summary })
 
     expect(res.statusCode).toEqual(201)
-    expect(res.headers['content-type']).toMatch(/json/)
-    expect(res.body).toHaveProperty('id', expect.stringMatching(regex))
+    expect(res.headers['content-type'] as string).toMatch(/json/)
+    expect(res.body as {id: string}).toHaveProperty('id', expect.stringMatching(regex))
   })
 
   test('"/questions/:questionId/answer" path method POST returns Error', async () => {
     const res = await request(testedApp).post(`/questions/${faker.datatype.uuid()}/answers`)
 
     expect(res.statusCode).toEqual(404)
-    expect(res.headers['content-type']).toMatch(/json/)
+    expect(res.headers['content-type'] as string).toMatch(/json/)
   })
 })
 
@@ -172,19 +176,19 @@ describe('mockup "/questions/:questionId/answers/:answerId" path test of good re
 
     expect(res.statusCode).toEqual(200)
     expect(res.headers['content-type']).toMatch(/json/)
-    expect(res.body).toEqual(expect.objectContaining([haveAnswersAnswerOne]))
+    expect(res.body as Answer).toEqual(expect.objectContaining([haveAnswersAnswerOne]))
   })
 
   test('"/questions/:questionId/answers/:answerId" path returns Error', async () => {
     const res = await request(testedApp).get(`/questions/:questionId/answers/some-gibberish`)
 
     expect(res.statusCode).toEqual(404)
-    expect(res.headers['content-type']).toMatch(/json/)
+    expect(res.headers['content-type'] as string).toMatch(/json/)
   })
   test('"/questions/:questionId/answers/:answerId" path returns Error', async () => {
     const res = await request(testedApp).get(`/questions/even-more-gibberish/answers/:answerId`)
 
     expect(res.statusCode).toEqual(404)
-    expect(res.headers['content-type']).toMatch(/json/)
+    expect(res.headers['content-type'] as string).toMatch(/json/)
   })
 })
