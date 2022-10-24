@@ -79,7 +79,7 @@ const makeQuestionRepository = fileName => {
   }
   const getAnswer = async (questionId, answerId) => {
     try {
-      if (uuidValidator(questionId), uuidValidator(answerId)) {
+      if (uuidValidator(questionId) && uuidValidator(answerId)) {
         const [{ answers }] = await getQuestionById(questionId)
 
         return answers.filter(el => el.id === answerId)
