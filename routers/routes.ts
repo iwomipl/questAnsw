@@ -1,13 +1,9 @@
-const { Router } = require('express')
-const { mainRouter } = require('./mainRouter')
-const { questionsRouter } = require('./questionsRouter')
+import { Router } from 'express'
+import { mainRouter } from './mainRouter'
+import { questionsRouter } from './questionsRouter'
 
-const routes = Router()
+export const routes = Router()
 
 routes
   .use(`/questions`, questionsRouter)
   .use(`/`, mainRouter)
-
-module.exports = {
-  routes
-}

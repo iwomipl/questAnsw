@@ -1,7 +1,7 @@
 import express from 'express'
 import { urlencoded, json } from 'body-parser'
 import { makeRepositories } from './middleware/repositories'
-import { handleFourOhFourError, handleError }  from './utils/errors'
+import { handleFourOhFourError, handleError } from './utils/errors'
 import { routes } from './routers/routes'
 
 export default function app(fileName: string) {

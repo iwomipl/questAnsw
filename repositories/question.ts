@@ -16,7 +16,7 @@ export const makeQuestionRepository = (fileName: string): Question => {
     }
   }
 
-  const getQuestionById = async (questionId: string): Promise<QuestionResponse[]>  => {
+  const getQuestionById = async (questionId: string): Promise<QuestionResponse[]> => {
     try {
       if (uuidValidator(questionId)) {
         const fileContent = await readFile(fileName, { encoding: 'utf-8' })
