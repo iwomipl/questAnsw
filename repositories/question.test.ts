@@ -1,20 +1,28 @@
-const { writeFile, rm } = require('fs/promises')
-const { faker } = require('@faker-js/faker')
-const { makeQuestionRepository } = require('./question')
-const { ValidationError } = require('../utils/errors')
-const { TEST_QUESTIONS_FILE_PATH } = require('../config/config')
+import { writeFile, rm } from 'fs/promises'
+import { faker } from '@faker-js/faker'
+import { makeQuestionRepository } from './question'
+import { ValidationError } from '../utils/errors'
+import { Answer, Question, QuestionResponse } from '../types/'
+import { TEST_QUESTIONS_FILE_PATH } from '../config/config'
+
+type arrayForDynamicTests = [
+  string,
+    string | undefined | null | Boolean | number,
+  string,
+  string?
+]
 
 const uuid = faker.datatype.uuid()
 const uuidAnswer = 'd498b0a4-6be3-4354-a3bc-87673aca0f31'
-let questionRepo
-let testQuestions
-let testQuestion
-let testQuestionSummary
-let testQuestionAuthor
-let testQuestionAnswer
-let testQuestionAnswerArray
+let questionRepo: Question
+let testQuestions: QuestionResponse[]
+let testQuestion: QuestionResponse[]
+let testQuestionSummary: string
+let testQuestionAuthor: string
+let testQuestionAnswer: Answer
+let testQuestionAnswerArray: Answer[]
 let thirdArgument = 'Is it?'
-const badCaseSolutions = [
+const badCaseSolutions: arrayForDynamicTests[] = [
   ['addQuestion() should throw an Error if "author" argument is to short', '?', thirdArgument],
   ['addQuestion() should throw an Error if "author" argument is to long', Array(151).fill('?', 0, 151).join(''), thirdArgument],
   ['addQuestion() should throw an Error if "author" argument is undefined', undefined, thirdArgument],
@@ -25,7 +33,7 @@ const badCaseSolutions = [
 
 beforeAll(async () => {
   await writeFile(TEST_QUESTIONS_FILE_PATH, JSON.stringify([]))
-  questionRepo = makeQuestionRepository(TEST_QUESTIONS_FILE_PATH)
+  questionRepo = makeQuestionRepository(TEST_QUESTIONS_FILE_PATH) as Question
   testQuestionSummary = 'What is my name?'
   testQuestionAuthor = 'Jack London'
   testQuestionAnswer = {
@@ -95,9 +103,6 @@ describe('questions in question repository', () => {
       expect(testedQuestion).toEqual(expect.objectContaining(testedQuestion))
     })
 
-    test('getQuestionById() should throw an Error if have no arguments', async () => {
-      await expect(async () => await questionRepo.getQuestionById()).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
-    })
 
     test('getQuestionById() should throw an Error if id is not uuid', async () => {
       const questionID = 'random-gibberish'
@@ -107,27 +112,28 @@ describe('questions in question repository', () => {
 
   /**-----------------------  addQuestions  -----------------------------*/
   describe('addQuestion in question repository', () => {
-    const adQuestionAuthorValidation = JSON.parse(JSON.stringify(badCaseSolutions))
-    adQuestionAuthorValidation.forEach(el => {
+    const adQuestionAuthorValidation: arrayForDynamicTests[] = JSON.parse(JSON.stringify(badCaseSolutions))
+    adQuestionAuthorValidation.forEach((el: arrayForDynamicTests) => {
       test(el[0], async () => {
-        await expect(async () => await questionRepo.addQuestion(el[1], el[2])).rejects.toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
+        await expect(async () => await questionRepo.addQuestion(el[1] as unknown as string, el[2])).rejects.toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
       })
     })
 
 
     /* Question argument validation */
     const questionCheckerThirdArgument = 'author'
-    const adQuestionQuestionValidation = JSON.parse(JSON.stringify(badCaseSolutions))
+    const adQuestionQuestionValidation: arrayForDynamicTests[] = JSON.parse(JSON.stringify(badCaseSolutions))
 
-    const questionChecker = adQuestionQuestionValidation.map(async el => {
+    const questionChecker = adQuestionQuestionValidation.map((el: arrayForDynamicTests) => {
       el[0] = el[0].replace('author', 'question')
       el[2] = questionCheckerThirdArgument
       return el
     })
 
-    questionChecker.forEach(el => {
+    //'addQuestion() should throw an Error if "question" argument is to short', author
+    questionChecker.forEach((el: arrayForDynamicTests) => {
       test(el[0], async () => {
-        await expect(async () => await questionRepo.addQuestion(el[2], el[1])).rejects.toThrow(ValidationError)
+        await expect(async () => await questionRepo.addQuestion(el[2], el[1] as unknown as string)).rejects.toThrow(ValidationError)
       })
     })
 
@@ -151,27 +157,24 @@ describe('questions in question repository', () => {
     /**-----------------------  getAnswers  -----------------------------*/
     describe('getAnswers and getAnswer in question repository', () => {
 
-      test('getAnswers() should throw an Error if have no arguments', async () => {
-        await expect(async () => await questionRepo.getAnswers()).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
-      })
-
       test('getAnswers() should throw an Error if id is not uuid', async () => {
         const questionID = 'random-gibberish'
         await expect(async () => await questionRepo.getAnswers(questionID)).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
       })
 
-      const getAnswersQuestionValidation = JSON.parse(JSON.stringify(badCaseSolutions))
+      const getAnswersQuestionValidation: arrayForDynamicTests[] = JSON.parse(JSON.stringify(badCaseSolutions))
 
-      const getAnswersChecker = getAnswersQuestionValidation.map(async el => {
+      const getAnswersChecker = getAnswersQuestionValidation.map((el: arrayForDynamicTests) => {
         el[0] = el[0].replace('addQuestion', 'getAnswers')
         el[0] = el[0].replace('author', 'questionID')
 
         return el
       })
 
-      getAnswersChecker.forEach(el => {
+      //getAnswers() should throw an Error if "questionId" argument is to short, author
+      getAnswersChecker.forEach((el: arrayForDynamicTests) => {
         test(el[0], async () => {
-          await expect(async () => await questionRepo.getAnswers(el[1])).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
+          await expect(async () => await questionRepo.getAnswers(el[1] as unknown as string)).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
         })
       })
 
@@ -203,26 +206,27 @@ describe('questions in question repository', () => {
     describe('getAnswer() in question repository', () => {
 
       /*questionId argument validation*/
-      const getAnswerQuestionIdValidation = JSON.parse(JSON.stringify(badCaseSolutions))
+      const getAnswerQuestionIdValidation: arrayForDynamicTests[] = JSON.parse(JSON.stringify(badCaseSolutions))
 
-      const getAnswerQuestionIdChecker = getAnswerQuestionIdValidation.map(async el => {
+      const getAnswerQuestionIdChecker = getAnswerQuestionIdValidation.map((el: arrayForDynamicTests) => {
         el[0] = el[0].replace('addQuestion', 'getAnswer')
         el[0] = el[0].replace('author', 'questionId')
         el[2] = uuidAnswer
 
         return el
       })
-      getAnswerQuestionIdChecker.forEach(el => {
-        test(el[0], async () => {
-          await expect(async () => await questionRepo.getAnswer(el[1], el[2])).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
-        })
 
+      //getAnswer() should throw an Error if "questionId" argument is to short
+      getAnswerQuestionIdChecker.forEach((el: arrayForDynamicTests) => {
+        test(el[0], async () => {
+          await expect(async () => await questionRepo.getAnswer(el[1] as unknown as string, el[2])).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
+        })
       })
 
       /* answerId argument validation */
-      const getAnswerAnswerIdValidation = JSON.parse(JSON.stringify(badCaseSolutions))
+      const getAnswerAnswerIdValidation: arrayForDynamicTests[] = JSON.parse(JSON.stringify(badCaseSolutions))
 
-      const getAnswerAnswerIdChecker = getAnswerAnswerIdValidation.map(async el => {
+      const getAnswerAnswerIdChecker = getAnswerAnswerIdValidation.map((el: arrayForDynamicTests) => {
         el[0] = el[0].replace('addQuestion', 'getAnswer')
         el[0] = el[0].replace('author', 'answerId')
         el[2] = uuid
@@ -230,9 +234,10 @@ describe('questions in question repository', () => {
         return el
       })
 
-      getAnswerAnswerIdChecker.forEach(el => {
+      //getAnswer() should throw an Error if "answerId" argument is to short
+      getAnswerAnswerIdChecker.forEach((el: arrayForDynamicTests) => {
         test(el[0], async () => {
-          await expect(async () => await questionRepo.getAnswer(el[2], el[1])).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
+          await expect(async () => await questionRepo.getAnswer(el[2], el[1] as unknown as string)).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
         })
       })
 
@@ -250,46 +255,47 @@ describe('questions in question repository', () => {
   describe('addAnswer() in question repository', () => {
 
     //questionId validation
-    const addAnswerQuestionIdValidation = JSON.parse(JSON.stringify(badCaseSolutions))
+    const addAnswerQuestionIdValidation: arrayForDynamicTests[] = JSON.parse(JSON.stringify(badCaseSolutions))
 
-    const addAnswerQuestionIdChecker = addAnswerQuestionIdValidation.map(async el => {
+    const addAnswerQuestionIdChecker = addAnswerQuestionIdValidation.map((el: arrayForDynamicTests) => {
       el[0] = el[0].replace('addQuestion', 'addAnswer')
       el[0] = el[0].replace('author', 'questionId')
       el[2] = 'Here\'s my answer'
-      el[3] = 'Me as Author'
+      el[3] = 'Me as Author' as string
 
       return el
     })
 
-    addAnswerQuestionIdChecker.forEach(el => {
+    addAnswerQuestionIdChecker.forEach((el: arrayForDynamicTests) => {
       test(el[0], async () => {
 
-        await expect(async () => await questionRepo.addAnswer(el[1], el[2], el[3])).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
+        await expect(async () => await questionRepo.addAnswer(el[1] as unknown as string, el[2], el[3])).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
       })
     })
 
     //answerString validation
-    const addAnswerAnswersStringValidation = JSON.parse(JSON.stringify(badCaseSolutions))
+    const addAnswerAnswersStringValidation: arrayForDynamicTests[] = JSON.parse(JSON.stringify(badCaseSolutions))
 
-    const addAnswerAnswersStringChecker = addAnswerAnswersStringValidation.map(async el => {
+    const addAnswerAnswersStringChecker = addAnswerAnswersStringValidation.map((el: arrayForDynamicTests) => {
       el[0] = el[0].replace('addQuestion', 'addAnswer')
-      el[0] = el[0].replace('author', 'answerString')
+      el[0] = el[0].replace('author', 'answerString') as string
       el[2] = uuid
       el[3] = 'Me as Author'
 
       return el
     })
 
-    addAnswerAnswersStringChecker.forEach(el => {
+    //addAnswer() should throw an Error if "answerString" argument is to short
+    addAnswerAnswersStringChecker.forEach((el: arrayForDynamicTests) => {
       test(el[0], async () => {
-        await expect(async () => await questionRepo.addAnswer(el[2], el[1], el[3])).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
+        await expect(async () => await questionRepo.addAnswer(el[2], el[1] as unknown as string, el[3])).rejects.toThrow(new ValidationError('Answer should be string between 3 and 150 characters long. Fix it and send Your question again.'))
       })
     })
 
     //authorString validation
-    const addAnswerAuthorStringValidation = JSON.parse(JSON.stringify(badCaseSolutions))
+    const addAnswerAuthorStringValidation: arrayForDynamicTests[] = JSON.parse(JSON.stringify(badCaseSolutions))
 
-    const addAnswerAuthorStringChecker = addAnswerAuthorStringValidation.map(async el => {
+    const addAnswerAuthorStringChecker = addAnswerAuthorStringValidation.map((el: arrayForDynamicTests) => {
       el[0] = el[0].replace('addQuestion', 'addAnswer')
       el[0] = el[0].replace('author', 'AuthorString')
       el[2] = uuid
@@ -298,15 +304,10 @@ describe('questions in question repository', () => {
       return el
     })
 
-    addAnswerAuthorStringChecker.forEach(el => {
+    addAnswerAuthorStringChecker.forEach((el: arrayForDynamicTests) => {
       test(el[0], async () => {
-        await expect(async () => await questionRepo.addAnswer(el[2], el[3], el[1])).rejects.toThrow(new ValidationError('Sorry, this is not UUID.'))
+        await expect(async () => await questionRepo.addAnswer(el[2], el[3], el[1] as unknown as string)).rejects.toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
       })
-    })
-
-    test('Add new answer to file', async () => {
-
-      await expect(async () => await questionRepo.addAnswer(el[2], el[1], el[3])).rejects.toThrow()
     })
 
     test('getAnswers() should Add new answer to correct question and add it to the file', async () => {
@@ -327,6 +328,4 @@ describe('questions in question repository', () => {
       expect(answers[0]).toEqual(expect.objectContaining(testQuestionAnswer))
     })
   })
-
-
 })

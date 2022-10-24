@@ -1,17 +1,16 @@
-const { ValidationError } = require('./errors')
-const { uuidValidator, questionValidator, authorValidator, answerValidator } = require('./validators')
-const { faker } = require('@faker-js/faker')
+import { ValidationError } from './errors'
+import { uuidValidator, questionValidator, authorValidator, answerValidator } from './validators'
+import { faker } from '@faker-js/faker'
 
 const uuid = faker.datatype.uuid()
+const bool = Boolean(Math.round(Math.random() * 0.5)) as unknown as string
+const num = Math.round(Math.random() * 105.5) as unknown as string
 
 
 describe('checking validation utils', () => {
 
 
   /**-----------------------  uuidValidator  -----------------------------*/
-  test('uuidValidator() should throw an Error if have no arguments', () => {
-    expect(() => uuidValidator()).toThrow(new ValidationError('Sorry, this is not UUID.'))
-  })
 
   test('uuidValidator() should throw an Error if uuid is not uuid', () => {
     const questionID = 'random-gibberish'
@@ -27,11 +26,13 @@ describe('checking validation utils', () => {
   })
 
   test('uuidValidator() should throw an Error if uuid is Boolean', () => {
-    expect(() => uuidValidator(Boolean(Math.round(Math.random() * 0.5)))).toThrow(new ValidationError('Sorry, this is not UUID.'))
+    const arg = bool
+    expect(() => uuidValidator(arg)).toThrow(new ValidationError('Sorry, this is not UUID.'))
   })
 
   test('uuidValidator() should throw an Error if uuid is Number', () => {
-    expect(() => uuidValidator(Math.round(Math.random() * 105.5))).toThrow(new ValidationError('Sorry, this is not UUID.'))
+    const arg = num
+    expect(() => uuidValidator(arg)).toThrow(new ValidationError('Sorry, this is not UUID.'))
   })
 
   test('uuidValidator() should return true if given proper uuid', () => {
@@ -39,9 +40,6 @@ describe('checking validation utils', () => {
   })
 
   /**-----------------------  questionValidator  -----------------------------*/
-  test('questionValidator() should throw an Error if have no arguments', () => {
-    expect(() => questionValidator()()).toThrow(new ValidationError('All questions should have question mark at the end My Friend. Fix it and send Your question again.'))
-  })
 
   test('questionValidator() should throw an Error if "question" argument does Not have question mark at the end', () => {
     expect(() => questionValidator('ttt')).toThrow('All questions should have question mark at the end My Friend. Fix it and send Your question again.')
@@ -61,7 +59,8 @@ describe('checking validation utils', () => {
   })
 
   test('questionValidator() should throw an Error if uuid is Number', () => {
-    expect(() => questionValidator(Math.round(Math.random() * 105.5))).toThrow(new ValidationError('All questions should have question mark at the end My Friend. Fix it and send Your question again.'))
+    const arg = num
+    expect(() => questionValidator(arg)).toThrow(new ValidationError('All questions should have question mark at the end My Friend. Fix it and send Your question again.'))
   })
 
   test('questionValidator() should throw an Error if uuid is undefined', () => {
@@ -73,11 +72,13 @@ describe('checking validation utils', () => {
   })
 
   test('questionValidator() should throw an Error if uuid is Boolean', () => {
-    expect(() => questionValidator(Boolean(Math.round(Math.random() * 0.5)))).toThrow(new ValidationError('All questions should have question mark at the end My Friend. Fix it and send Your question again.'))
+    const arg = bool
+    expect(() => questionValidator(arg)).toThrow(new ValidationError('All questions should have question mark at the end My Friend. Fix it and send Your question again.'))
   })
 
   test('questionValidator() should throw an Error if uuid is Number', () => {
-    expect(() => questionValidator(Math.round(Math.random() * 105.5))).toThrow(new ValidationError('All questions should have question mark at the end My Friend. Fix it and send Your question again.'))
+    const arg = num
+    expect(() => questionValidator(arg)).toThrow(new ValidationError('All questions should have question mark at the end My Friend. Fix it and send Your question again.'))
   })
 
   test('questionValidator() should return question string if given proper one', () => {
@@ -89,9 +90,6 @@ describe('checking validation utils', () => {
 
 
   /**-----------------------  answerValidator  -----------------------------*/
-  test('answerValidator() should throw an Error if have no arguments', () => {
-    expect(() => answerValidator()()).toThrow(new ValidationError('Answer should be string between 3 and 150 characters long. Fix it and send Your question again.'))
-  })
 
   test('answerValidator() should throw an Error if "question" argument is to short', () => {
     expect(() => answerValidator('t')).toThrow(new ValidationError('Answer should be string between 3 and 150 characters long. Fix it and send Your question again.'))
@@ -103,7 +101,8 @@ describe('checking validation utils', () => {
   })
 
   test('answerValidator() should throw an Error if uuid is Number', () => {
-    expect(() => answerValidator(Math.round(Math.random() * 105.5))).toThrow(new ValidationError('Answer should be string between 3 and 150 characters long. Fix it and send Your question again.'))
+    const arg = num
+    expect(() => answerValidator(arg)).toThrow(new ValidationError('Answer should be string between 3 and 150 characters long. Fix it and send Your question again.'))
   })
 
   test('answerValidator() should throw an Error if uuid is undefined', () => {
@@ -115,11 +114,13 @@ describe('checking validation utils', () => {
   })
 
   test('answerValidator() should throw an Error if uuid is Boolean', () => {
-    expect(() => answerValidator(Boolean(Math.round(Math.random() * 0.5)))).toThrow(new ValidationError('Answer should be string between 3 and 150 characters long. Fix it and send Your question again.'))
+    const arg = bool
+    expect(() => answerValidator(arg)).toThrow(new ValidationError('Answer should be string between 3 and 150 characters long. Fix it and send Your question again.'))
   })
 
   test('answerValidator() should throw an Error if uuid is Number', () => {
-    expect(() => answerValidator(Math.round(Math.random() * 105.5))).toThrow(new ValidationError('Answer should be string between 3 and 150 characters long. Fix it and send Your question again.'))
+    const arg = num
+    expect(() => answerValidator(arg)).toThrow(new ValidationError('Answer should be string between 3 and 150 characters long. Fix it and send Your question again.'))
   })
 
   test('answerValidator() should return question string if given proper one', () => {
@@ -130,11 +131,6 @@ describe('checking validation utils', () => {
   })
 
   /**-----------------------  authorValidator  -----------------------------*/
-
-  test('authorValidator() should throw an Error if have no arguments', () => {
-    expect(() => authorValidator()()).toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
-  })
-
   test('authorValidator() should throw an Error if "question" argument is to short', () => {
     expect(() => authorValidator('t')).toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
   })
@@ -145,7 +141,8 @@ describe('checking validation utils', () => {
   })
 
   test('authorValidator() should throw an Error if uuid is Number', () => {
-    expect(() => authorValidator(Math.round(Math.random() * 105.5))).toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
+    const arg = num
+    expect(() => authorValidator(arg)).toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
   })
 
   test('authorValidator() should throw an Error if uuid is undefined', () => {
@@ -157,11 +154,13 @@ describe('checking validation utils', () => {
   })
 
   test('authorValidator() should throw an Error if uuid is Boolean', () => {
-    expect(() => authorValidator(Boolean(Math.round(Math.random() * 0.5)))).toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
+    const arg = bool
+    expect(() => authorValidator(arg)).toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
   })
 
   test('authorValidator() should throw an Error if uuid is Number', () => {
-    expect(() => authorValidator(Math.round(Math.random() * 105.5))).toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
+    const arg = num
+    expect(() => authorValidator(arg)).toThrow(new ValidationError('Author\'s credentials should be between 2 and 50 letters long. Fix it and send Your question again.'))
   })
 
   test('authorValidator() should return question string if given proper one', () => {

@@ -1,5 +1,5 @@
-import makeApp  from './server'
-import { STORAGE_FILE_PATH, PORT }  from './config/config'
+import makeApp from './server'
+import { STORAGE_FILE_PATH, PORT } from './config/config'
 
 let app = makeApp(STORAGE_FILE_PATH)
 

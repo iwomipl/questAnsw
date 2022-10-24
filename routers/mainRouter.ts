@@ -1,12 +1,11 @@
-const { Router } = require('express')
+import { Router } from 'express'
+import { RequestCustom } from '../types'
 
-const mainRouter = Router()
-
+export const mainRouter = Router()
+export type MainRouterResponseBody = {
+  message: string;
+}
 mainRouter
-  .get('/', (_, res) => {
+  .get('/', (req: RequestCustom, res) => {
     res.json({ message: 'Welcome to responder!' })
   })
-
-module.exports = {
-  mainRouter
-}

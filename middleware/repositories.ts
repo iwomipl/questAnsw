@@ -1,6 +1,10 @@
+import { NextFunction, Response } from 'express'
+import { Question, RequestCustom } from '../types'
+
+
 const { makeQuestionRepository } = require('../repositories/question')
 
-module.exports = fileName => (req, res, next) => {
-  req.repositories = { questionRepo: makeQuestionRepository(fileName) }
+export const makeRepositories = (fileName: string) => (req: RequestCustom, res: Response, next: NextFunction) => {
+  req.repositories = { questionRepo: makeQuestionRepository(fileName) as Question }
   next()
 }

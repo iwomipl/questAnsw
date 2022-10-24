@@ -1,13 +1,14 @@
-const { readFile, writeFile } = require('fs/promises')
-const { v4: uuid } = require('uuid')
-const { ValidationError } = require('../utils/errors')
-const { uuidValidator, questionValidator, authorValidator, answerValidator } = require('../utils/validators')
+import { readFile, writeFile } from 'fs/promises'
+import { v4 as uuid } from 'uuid'
+import { ValidationError } from '../utils/errors'
+import { uuidValidator, questionValidator, authorValidator, answerValidator } from '../utils/validators'
+import { Answer, IdObject, Question, QuestionResponse } from '../types/'
 
-const makeQuestionRepository = fileName => {
-  const getQuestions = async () => {
+export const makeQuestionRepository = (fileName: string): Question => {
+  const getQuestions = async (): Promise<QuestionResponse[]> => {
     try {
       const fileContent = await readFile(fileName, { encoding: 'utf-8' })
-      const questions = JSON.parse(fileContent)
+      const questions: QuestionResponse[] = JSON.parse(fileContent)
 
       return questions
     } catch (err) {
@@ -15,11 +16,11 @@ const makeQuestionRepository = fileName => {
     }
   }
 
-  const getQuestionById = async questionId => {
+  const getQuestionById = async (questionId: string): Promise<QuestionResponse[]> => {
     try {
       if (uuidValidator(questionId)) {
         const fileContent = await readFile(fileName, { encoding: 'utf-8' })
-        const question = JSON.parse(fileContent).filter(el => el.id === questionId)
+        const question: QuestionResponse[] = JSON.parse(fileContent).filter((el: QuestionResponse) => el.id === questionId)
 
         return question
       }
@@ -31,12 +32,12 @@ const makeQuestionRepository = fileName => {
       throw new Error(err.message)
     }
   }
-  const addQuestion = async (authorString, questionString) => {
+  const addQuestion = async (authorString: string, questionString: string): Promise<IdObject> => {
     try {
-      const question = questionValidator(questionString)
+      const summary = questionValidator(questionString)
       const author = authorValidator(authorString)
       let questions = await getQuestions()
-      let id
+      let id: string
 
       //check if question with this id exists and changing it in this case
       do {
@@ -47,7 +48,7 @@ const makeQuestionRepository = fileName => {
       questions = [...questions, {
         id,
         author,
-        question,
+        summary,
         answers: []
       }]
 
@@ -62,7 +63,7 @@ const makeQuestionRepository = fileName => {
     }
 
   }
-  const getAnswers = async questionId => {
+  const getAnswers = async (questionId: string): Promise<Answer[]> => {
     try {
       if (uuidValidator(questionId)) {
         const [{ answers }] = await getQuestionById(questionId)
@@ -77,9 +78,9 @@ const makeQuestionRepository = fileName => {
       throw new Error(err.message)
     }
   }
-  const getAnswer = async (questionId, answerId) => {
+  const getAnswer = async (questionId: string, answerId: string): Promise<Answer[]> => {
     try {
-      if (uuidValidator(questionId) || uuidValidator(answerId)) {
+      if (uuidValidator(questionId) && uuidValidator(answerId)) {
         const [{ answers }] = await getQuestionById(questionId)
 
         return answers.filter(el => el.id === answerId)
@@ -92,13 +93,13 @@ const makeQuestionRepository = fileName => {
       throw new Error(err.message)
     }
   }
-  const addAnswer = async (questionId, answerString, authorString) => {
+  const addAnswer = async (questionId: string, answerString: string, authorString: string): Promise<IdObject> => {
     try {
       if (uuidValidator(questionId)) {
         const summary = answerValidator(answerString)
         const author = authorValidator(authorString)
         const answers = await getAnswers(questionId)
-        let id
+        let id: string
 
         //check if answer with this id exists and changing it in this case
         do {
@@ -144,5 +145,3 @@ const makeQuestionRepository = fileName => {
     addAnswer
   }
 }
-
-module.exports = { makeQuestionRepository }

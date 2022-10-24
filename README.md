@@ -2,6 +2,8 @@
 
 # DISCLAIMER
 I've decided to rewrite the app to Typescript. So from now on, main branch of this repository will be js version, until I'll finish rewriting app on other branches and merge them into main branch. 
+# DISCLAIMER No. Two
+I have finished and decided to leave two versions of code for a while. On main branch is a JS version and on develop is app rewritten in TS.  
 
 ## Tech Stack and structure
 I have tried to keep given tech stack and structure of application and code (according to prettier file). 

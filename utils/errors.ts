@@ -1,7 +1,10 @@
-class ValidationError extends Error {
+import { NextFunction, Response } from 'express'
+import { RequestCustom } from '../types'
+
+export class ValidationError extends Error {
 }
 
-const handleError = (err, req, res, next) => {
+export const handleError = (err: Error, req: RequestCustom, res: Response, next: NextFunction) => {
   console.error(err)
 
   res.status(err instanceof ValidationError ? 400 : 500)
@@ -11,14 +14,8 @@ const handleError = (err, req, res, next) => {
 
 }
 
-const handleFourOhFourError = (req, res, next) => {
+export const handleFourOhFourError = (req: RequestCustom, res: Response, next: NextFunction) => {
 
   res.status(404)
     .json([{ error: 'Not found' }])
-}
-
-module.exports = {
-  ValidationError,
-  handleError,
-  handleFourOhFourError
 }

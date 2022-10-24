@@ -1,13 +1,12 @@
-const request = require('supertest')
-const { TEST_QUESTIONS_FILE_PATH } = require('../config/config')
-const makeApp = require('../server')
+import request from 'supertest'
+import { TEST_QUESTIONS_FILE_PATH } from '../config/config'
+import makeApp from '../server'
+import { MainRouterResponseBody } from './mainRouter'
 
-let mainRouterResponseBody
-let testedApp
+let mainRouterResponseBody: MainRouterResponseBody
+let testedApp = makeApp(TEST_QUESTIONS_FILE_PATH)
 
 beforeAll(async () => {
-  testedApp = makeApp(TEST_QUESTIONS_FILE_PATH)
-
   mainRouterResponseBody = { message: 'Welcome to responder!' }
 })
 
@@ -16,14 +15,14 @@ afterAll(async () => {
 
 })
 
-describe('mockup ' / ' path test of good response', () => {
+describe(`mockup '/' path test of good response`, () => {
   test('s', async () => {
 
     const res = await request(testedApp)
       .get('/').set('Accept', 'application/json')
 
     expect(res.statusCode).toEqual(200)
-    expect(res.headers['content-type']).toMatch(/json/)
-    expect(res.body).toEqual(expect.objectContaining(mainRouterResponseBody))
+    expect(res.headers['content-type'] as string).toMatch(/json/)
+    expect(res.body as MainRouterResponseBody).toEqual(expect.objectContaining(mainRouterResponseBody))
   })
 })
