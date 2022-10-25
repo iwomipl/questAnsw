@@ -33,7 +33,7 @@ const makeQuestionRepository = fileName => {
   }
   const addQuestion = async (authorString, questionString) => {
     try {
-      const question = questionValidator(questionString)
+      const summary = questionValidator(questionString)
       const author = authorValidator(authorString)
       let questions = await getQuestions()
       let id
@@ -47,7 +47,7 @@ const makeQuestionRepository = fileName => {
       questions = [...questions, {
         id,
         author,
-        question,
+        summary,
         answers: []
       }]
 
